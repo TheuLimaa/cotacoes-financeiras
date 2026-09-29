@@ -16,3 +16,4 @@ data/raw/*
 .vscode/
 .thumbs.db
 
+src/config.py
