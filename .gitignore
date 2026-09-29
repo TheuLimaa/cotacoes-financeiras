@@ -1,0 +1,18 @@
+# Ambiente virtual Python
+venv/
+
+# Arquivos de cache do Python
+__pycache__/
+*.pyc
+
+# Checkpoints do Jupyter Notebook
+.ipynb_checkpoints/
+
+#Dados brutos baixados da Api (grandes e regeneráveis, não precisam ser versionados)
+data/raw/*
+!data/raw/.gitkeep
+
+# Editor / SO
+.vscode/
+.thumbs.db
+
