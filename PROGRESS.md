@@ -1,50 +1,51 @@
 # Progresso do projeto
 
-Última atualização: 2026-09-28
+Última atualização: 2026-09-29
 
 ## O que já foi feito
 
 - [x] Estrutura de pastas criada (`data/raw`, `data/processed`, `notebooks`, `src`)
 - [x] `README.md`, `.gitignore`, `requirements.txt` criados
-- [x] `git init` + primeiro commit + push para
-      `github.com/TheuLimaa/cotacoes-financeiras`
-- [x] Chave da API Alpha Vantage obtida e guardada com segurança em `src/config.py`
-      (arquivo no `.gitignore`, confirmado que nunca foi commitado)
-- [ ] **Notebook `notebooks/01_extracao.ipynb` em andamento** — primeira célula escrita,
-      ainda não confirmado se rodou com sucesso
+- [x] `git init` + repositório publicado em `github.com/TheuLimaa/cotacoes-financeiras`
+- [x] Chave da API Alpha Vantage guardada com segurança em `src/config.py` (gitignored,
+      confirmado que nunca foi commitada)
+- [x] **Ciclo completo de extração e limpeza da primeira tabela**, em
+      `notebooks/01_extracao.ipynb`:
+  - Descoberto que `FX_DAILY` (câmbio) virou endpoint pago — trocado para
+    `TIME_SERIES_DAILY` (ações), que continua gratuito
+  - Entendida a estrutura da resposta da Alpha Vantage: um **dicionário** (não lista)
+    com `"Meta Data"` e `"Time Series (Daily)"`, sendo esse último um
+    dicionário-de-dicionários (data → métricas do dia), diferente do formato do Banco
+    Mundial (lista) e do Banco Central (lista direta)
+  - Convertido com `pd.DataFrame.from_dict(serie, orient="index")`
+  - Colunas renomeadas (`1. open` → `abertura`, etc.) com `.rename(columns={...})`
+  - Tipos corrigidos: colunas de preço/volume de `str` para `float`/`int` com
+    `.astype({...})`; índice de data convertido para datetime de verdade com
+    `pd.to_datetime()`
+  - Checado nulos (`isna().sum()`) e duplicatas (`duplicated().sum()`) — nenhum problema
+  - Dado bruto salvo em `data/raw/ibm_daily_raw.json`, dado tratado salvo em
+    `data/processed/ibm_daily.csv` (mantendo o índice, pois é onde mora a data)
+  - Commitado e enviado ao GitHub
 
-## Exatamente onde parar / retomar
+## Próximo passo (quando retomar)
 
-A célula que está no notebook (ainda não testada):
+O usuário escolheu **parar por hoje** depois de fechar esse primeiro ciclo. As opções
+que ficaram na mesa para a próxima sessão:
 
-```python
-import sys
-from pathlib import Path
+1. **Buscar uma segunda tabela** (outra ação, ou `OVERVIEW` com dados da empresa) para
+   praticar merge entre duas tabelas — mesmo padrão do projeto do Banco Mundial
+2. **Ir para SQL** — carregar `ibm_daily.csv` num banco SQLite e praticar consultas
+3. Ou definir uma direção nova, dependendo do que fizer mais sentido na hora
 
-sys.path.insert(0, str(Path.cwd().parent))
-
-from src.config import API_KEY
-import requests
-
-url = f"https://www.alphavantage.co/query?function=FX_DAILY&from_symbol=USD&to_symbol=BRL&apikey={API_KEY}"
-resposta = requests.get(url)
-resposta.json()
-```
-
-**Próximo passo:** rodar essa célula e ver o resultado. Se dar erro tipo
-`"Invalid API call"`, colar a mensagem exata para debugar juntos. Se funcionar, os
-próximos passos (na mesma lógica do projeto do Banco Mundial) são:
-1. Separar a parte do JSON que interessa (a Alpha Vantage também costuma vir com um
-   "envelope" de metadados + os dados de verdade — precisa olhar a estrutura crua
-   primeiro, igual fizemos antes)
-2. Transformar em DataFrame com pandas
-3. Tratar tipos (datas, números que vêm como texto)
-4. Salvar em `data/raw/`
+Perguntar ao usuário qual dessas prefere ao retomar.
 
 ## Combinados do projeto
 
 - O usuário escreve e roda o código; o assistente só explica e guia (não resolve por
-  ele) — mesma regra do projeto do Banco Mundial.
-- Nunca commitar `src/config.py` (contém a chave da API).
+  ele).
+- Nunca commitar `src/config.py` (contém a chave da API) — sempre confirmar com
+  `git status` antes de commitar quando mexer perto dele.
 - Documentação (README, este PROGRESS.md) pode ser escrita pelo assistente; código
   técnico, não.
+- Erros de digitação em comandos do terminal são comuns (dictation/transcrição) — vale
+  sempre conferir a mensagem de erro exata antes de sugerir a correção.
