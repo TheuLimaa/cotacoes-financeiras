@@ -30,6 +30,14 @@
     salvar antes do `git add`) — lição: sempre conferir tamanho/conteúdo do arquivo
     antes de confiar no commit
 
+## Nota
+
+Cheguei a montar aqui uma simulação de API SQL (servidor fictício + extração +
+tratamento em SQL) pra praticar o fluxo que uso no trabalho, mas decidi separar isso
+num repositório próprio, `tratamento-dados-sql`, já que é um assunto diferente
+(SQL puro, sem pandas) do que esse projeto se propõe. Esse projeto aqui continua
+focado em Python + pandas + API REST pública.
+
 ## Próximo passo
 
 Ainda preciso decidir entre:
